@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: chat
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chat
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+logging:
+  file:
+    path: logs
+  level:
+    root: INFO
+    com.messaging.chat: DEBUG
