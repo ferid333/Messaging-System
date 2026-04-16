@@ -14,9 +14,9 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase :
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
 logging:
-  file:
-    path: logs
   level:
     root: INFO
     com.messaging.chat: DEBUG
