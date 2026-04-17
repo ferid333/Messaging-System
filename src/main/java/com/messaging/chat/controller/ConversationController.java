@@ -1,17 +1,11 @@
 package com.messaging.chat.controller;
 
 
-import com.messaging.chat.model.dto.ConversationResponse;
-import com.messaging.chat.model.dto.CreateConversationRequest;
+import com.messaging.chat.model.dto.request.CreateConversationRequest;
+import com.messaging.chat.model.dto.response.ConversationResponse;
 import com.messaging.chat.service.ConversationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,5 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConversationController {
 
     private final ConversationService conversationService;
+
+    @PostMapping
+    public ConversationResponse createConversations(
+            @RequestHeader("userId") Long userId,
+            @RequestBody CreateConversationRequest createConversationRequest) {
+
+        return conversationService.createConversations(userId, createConversationRequest);
+    }
 
 }

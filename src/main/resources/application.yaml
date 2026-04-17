@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/chat
     username: postgres
-    password: postgres
+    password: admin
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
