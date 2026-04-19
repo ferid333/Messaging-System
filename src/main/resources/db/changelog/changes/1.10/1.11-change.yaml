@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: make_attachment_message_optional_for_pending_uploads
+      author: Farid Gurbanov
+      changes:
+        - dropNotNullConstraint:
+            tableName: attachments
+            columnName: message_id
+            columnDataType: BIGINT
+        - dropColumn:
+            tableName: attachments
+            columnName: thumbnail_storage_key
+        - dropColumn:
+            tableName: attachments
+            columnName: public_url

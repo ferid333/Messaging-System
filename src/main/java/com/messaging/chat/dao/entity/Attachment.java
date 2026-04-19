@@ -9,14 +9,14 @@ import lombok.Setter;
 @Table(name = "attachments")
 @Getter
 @Setter
-public class Attachment extends BaseEntity{
+public class Attachment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "message_id", nullable = false)
+    @JoinColumn(name = "message_id")
     private Message message;
 
     @Column(name = "uploader_id")
@@ -36,12 +36,6 @@ public class Attachment extends BaseEntity{
 
     @Column(name = "checksum")
     private String checksum;
-
-    @Column(name = "thumbnail_storage_key")
-    private String thumbnailStorageKey;
-
-    @Column(name = "public_url")
-    private String publicUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
