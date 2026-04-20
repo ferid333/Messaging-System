@@ -1,0 +1,101 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_conversation_delivery_and_read_state_tables
+      author: Farid Gurbanov
+      changes:
+        - createTable:
+            tableName: conversation_delivery_state
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_conversation_delivery_state
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: conversation_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_delivered_message_id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+        - createTable:
+            tableName: read_delivery_state
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_read_delivery_state
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: conversation_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_read_message_id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            constraintName: fk_conversation_delivery_state_conversation
+            baseTableName: conversation_delivery_state
+            baseColumnNames: conversation_id
+            referencedTableName: conversations
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: fk_conversation_delivery_state_message
+            baseTableName: conversation_delivery_state
+            baseColumnNames: last_delivered_message_id
+            referencedTableName: messages
+            referencedColumnNames: id
+            onDelete: SET NULL
+        - addForeignKeyConstraint:
+            constraintName: fk_read_delivery_state_conversation
+            baseTableName: read_delivery_state
+            baseColumnNames: conversation_id
+            referencedTableName: conversations
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: fk_read_delivery_state_message
+            baseTableName: read_delivery_state
+            baseColumnNames: last_read_message_id
+            referencedTableName: messages
+            referencedColumnNames: id
+            onDelete: SET NULL
+        - addUniqueConstraint:
+            tableName: conversation_delivery_state
+            columnNames: conversation_id, user_id
+            constraintName: uk_conversation_delivery_state_conversation_user
+        - addUniqueConstraint:
+            tableName: read_delivery_state
+            columnNames: conversation_id, user_id
+            constraintName: uk_read_delivery_state_conversation_user

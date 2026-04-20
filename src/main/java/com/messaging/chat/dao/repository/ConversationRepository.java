@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
 
+    boolean existsByIdAndConversationParticipantsUserId(Long conversationId, Long userId);
+
     @Query("""
             select distinct c
             from Conversation c

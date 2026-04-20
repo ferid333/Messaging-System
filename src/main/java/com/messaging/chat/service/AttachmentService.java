@@ -23,6 +23,9 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
@@ -99,6 +102,17 @@ public class AttachmentService {
 
         logger.info("Action.log.end confirmUpload userId: {}, attachmentId: {}", userId, attachmentId);
         return attachmentMapper.toAttachmentConfirmResponse(savedAttachment);
+    }
+
+    public String createDownloadUrl(String storageKey) {
+        PresignedGetObjectRequest presignedGetObjectRequest = s3Presigner.presignGetObject(GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(presignDurationMinutes))
+                .getObjectRequest(GetObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(storageKey)
+                        .build())
+                .build());
+        return presignedGetObjectRequest.url().toString();
     }
 
     private void validateUploadedFile(PresignUploadRequest presignUploadRequest) {
