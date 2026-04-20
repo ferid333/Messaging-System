@@ -3,6 +3,7 @@ package com.messaging.chat.service;
 import com.messaging.chat.dao.entity.Attachment;
 import com.messaging.chat.dao.entity.Conversation;
 import com.messaging.chat.dao.entity.ConversationDeliveryState;
+import com.messaging.chat.dao.entity.ConversationParticipant;
 import com.messaging.chat.dao.entity.Message;
 import com.messaging.chat.dao.entity.ReadDeliveryState;
 import com.messaging.chat.dao.repository.AttachmentRepository;
@@ -14,6 +15,7 @@ import com.messaging.chat.logging.DPLogger;
 import com.messaging.chat.mapper.MessageMapper;
 import com.messaging.chat.mapper.MessageStateMapper;
 import com.messaging.chat.model.constant.FileStatus;
+import com.messaging.chat.model.dto.event.MessageNotificationEvent;
 import com.messaging.chat.model.dto.request.SendMessageRequest;
 import com.messaging.chat.model.dto.response.AttachmentResponse;
 import com.messaging.chat.model.dto.response.MessageResponse;
@@ -29,7 +31,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,6 +51,7 @@ public class MessageService {
     private final MessageMapper messageMapper;
     private final MessageStateMapper messageStateMapper;
     private final AttachmentService attachmentService;
+    private final MessageNotificationPublisher messageNotificationPublisher;
 
     @Transactional(readOnly = true)
     public List<MessageResponse> getMessages(Long userId, Long conversationId, Long beforeMessageId, Integer limit) {
@@ -98,6 +100,7 @@ public class MessageService {
         message.setAttachments(attachments);
 
         Message savedMessage = messageRepository.save(message);
+        publishMessageNotificationEvents(savedMessage);
 
         logger.info("Action.log.end sendMessage userId: {}, conversationId: {}, messageId: {}",
                 userId, conversationId, savedMessage.getId());
@@ -191,6 +194,20 @@ public class MessageService {
                 .toList();
 
         return messageMapper.toResponseWithAttachments(messageResponse, attachments);
+    }
+
+    private void publishMessageNotificationEvents(Message message) {
+        List<MessageNotificationEvent> events = message.getConversation().getConversationParticipants().stream()
+                .map(ConversationParticipant::getUserId)
+                .filter(participantUserId -> !participantUserId.equals(message.getSenderId()))
+                .map(recipientUserId -> messageMapper.toMessageNotificationEvent(message, recipientUserId))
+                .toList();
+
+        if (events.isEmpty()) {
+            return;
+        }
+
+        events.forEach(messageNotificationPublisher::publish);
     }
 
     private AttachmentResponse toAttachmentResponseWithDownloadUrl(Attachment attachment) {
