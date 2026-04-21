@@ -14,8 +14,14 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  liquibase :
+  liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
+  rabbitmq:
+    host:
+    port:
+    username:
+    password:
+
 logging:
   level:
     root: INFO
@@ -26,4 +32,11 @@ storage:
     region:
     access-key-id:
     secret-access-key:
-    presign-duration-minutes:
+    presign-duration-minutes: 5
+
+rabbitmq:
+  notification-queue:
+  notification-exchange:
+  notification-routing-key:
+  notification-dlq:
+  notification-dlx:

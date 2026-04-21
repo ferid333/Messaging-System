@@ -3,6 +3,7 @@ package com.messaging.chat.mapper;
 import com.messaging.chat.dao.entity.Attachment;
 import com.messaging.chat.dao.entity.Conversation;
 import com.messaging.chat.dao.entity.Message;
+import com.messaging.chat.model.dto.event.MessageNotificationEvent;
 import com.messaging.chat.model.dto.request.SendMessageRequest;
 import com.messaging.chat.model.dto.response.AttachmentResponse;
 import com.messaging.chat.model.dto.response.MessagePreview;
@@ -54,4 +55,12 @@ public interface MessageMapper {
     @Mapping(target = "status", source = "attachmentResponse.status")
     @Mapping(target = "downloadUrl", source = "downloadUrl")
     AttachmentResponse toAttachmentResponseWithDownloadUrl(AttachmentResponse attachmentResponse, String downloadUrl);
+
+    @Mapping(target = "recipientUserId", source = "recipientUserId")
+    @Mapping(target = "senderId", source = "message.senderId")
+    @Mapping(target = "conversationId", source = "message.conversation.id")
+    @Mapping(target = "messageId", source = "message.id")
+    @Mapping(target = "messageType", source = "message.type")
+    @Mapping(target = "textContent", source = "message.textContent")
+    MessageNotificationEvent toMessageNotificationEvent(Message message, Long recipientUserId);
 }
