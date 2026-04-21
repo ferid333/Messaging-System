@@ -15,6 +15,14 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
     boolean existsByIdAndConversationParticipantsUserId(Long conversationId, Long userId);
 
     @Query("""
+            select cp.userId
+            from Conversation c
+            join c.conversationParticipants cp
+            where c.id = :conversationId
+            """)
+    List<Long> findParticipantUserIdsByConversationId(@Param("conversationId") Long conversationId);
+
+    @Query("""
             select distinct c
             from Conversation c
             join c.conversationParticipants cp

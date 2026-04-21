@@ -21,6 +21,12 @@ spring:
     port:
     username:
     password:
+  data:
+    redis:
+      host:
+      port:
+      username:
+      password:
 
 logging:
   level:
