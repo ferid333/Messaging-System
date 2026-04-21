@@ -32,6 +32,16 @@ logging:
   level:
     root: INFO
     com.messaging.chat: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+
 storage:
   s3:
     bucket-name:
