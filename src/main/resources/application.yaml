@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: chat
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chat
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+  rabbitmq:
+    host:
+    port:
+    username:
+    password:
+  data:
+    redis:
+      host:
+      port:
+      username:
+      password:
+
+logging:
+  level:
+    root: INFO
+    com.messaging.chat: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+
+storage:
+  s3:
+    bucket-name:
+    region:
+    access-key-id:
+    secret-access-key:
+    presign-duration-minutes: 5
+
+rabbitmq:
+  notification-queue:
+  notification-exchange:
+  notification-routing-key:
+  notification-dlq:
+  notification-dlx:

@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_message_client_id_idempotency_constraint
+      author: Farid Gurbanov
+      changes:
+        - addUniqueConstraint:
+            tableName: messages
+            columnNames: conversation_id, sender_id, client_message_id
+            constraintName: uk_messages_conversation_sender_client_message
