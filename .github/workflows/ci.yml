@@ -27,10 +27,12 @@ jobs:
 
       - name: Validate PR title
         env:
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          if [[ ! "$PR_TITLE" =~ ^DVLP ]]; then
-            echo "PR title must start with DVLP."
+          if [[ "$BASE_BRANCH" == "develop" && ! "$PR_TITLE" =~ ^DVLP ]]; then
+            echo "PR title must start with DVLP when targeting develop."
+            echo "Target branch: $BASE_BRANCH"
             echo "Actual title: $PR_TITLE"
             exit 1
           fi
